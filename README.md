@@ -21,34 +21,6 @@ An AI-powered interview application built with Django and Claude API. The system
 - **PDF Generation:** ReportLab
 - **Deployment:** Docker + Portainer + Cloudflare Tunnel
 
-## Project Structure
-ai-interviewer/
-├── ai_interviewer/         # Main Django app
-│   ├── migrations/         # Database migrations
-│   ├── models.py           # Interview, Question, Answer models
-│   ├── prompts.py          # Claude API logic & prompt engineering
-│   ├── views.py            # Request handling & business logic
-│   └── urls.py             # URL routing
-├── core/                   # Django project settings
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── templates/              # HTML templates
-│   ├── base.html
-│   ├── login.html
-│   ├── home.html
-│   ├── interview.html
-│   ├── summary.html
-│   └── history.html
-├── static/
-│   └── fonts/              # DejaVu fonts for PDF export
-├── .env                    # Environment variables (not committed)
-├── .gitignore
-├── Dockerfile
-├── docker-compose.yml
-├── manage.py
-└── requirements.txt
-
 ## Environment Variables
 
 Create a `.env` file in the root directory with the following variables:
