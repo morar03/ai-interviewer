@@ -6,6 +6,13 @@ services:
       - "2000:8000"
     volumes:
       - ai_interviewer_data:/app/data
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - APP_USERNAME=${APP_USERNAME}
+      - APP_PASSWORD=${APP_PASSWORD}
+      - DB_PATH=${DB_PATH}
 
 volumes:
   ai_interviewer_data:
