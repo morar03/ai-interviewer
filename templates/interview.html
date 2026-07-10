@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Interview — AI Interviewer{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-2xl mx-auto">
+
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-gray-400">Question {{ question_number }} of 5</span>
+            <span class="text-sm text-gray-400">Topic: <span class="text-white">{{ interview.topic }}</span></span>
+        </div>
+        <div class="w-full bg-gray-800 rounded-full h-1.5">
+            <div
+                class="bg-blue-500 h-1.5 rounded-full transition-all duration-500"
+                style="width: {% widthratio question_number 5 100 %}%"
+            ></div>
+        </div>
+    </div>
+
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 mb-6">
+        <div class="flex items-start gap-4 mb-8">
+            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-sm font-bold shrink-0">
+                AI
+            </div>
+            <div>
+                <p class="text-xs text-gray-500 mb-2">AI Interviewer</p>
+                <p class="text-white text-lg leading-relaxed">{{ current_question.text }}</p>
+            </div>
+        </div>
+
+        <form method="POST" id="answer-form">
+            {% csrf_token %}
+            <div class="mb-2">
+                <textarea
+                    id="answer-input"
+                    name="answer"
+                    required
+                    autofocus
+                    rows="5"
+                    maxlength="1000"
+                    oninput="updateCharCount(this)"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition resize-none"
+                    placeholder="Type your answer here..."
+                ></textarea>
+            </div>
+
+            <div class="flex justify-between items-center mb-4">
+                <span id="char-count" class="text-xs text-gray-500">0 / 1000</span>
+                <span id="char-warning" class="text-xs text-yellow-400 hidden">Approaching character limit</span>
+            </div>
+
+            <div class="flex justify-end">
+                <button
+                    id="submit-btn"
+                    type="submit"
+                    class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-6 py-3 rounded-lg transition flex items-center gap-2"
+                >
+                    <span id="btn-text">Next →</span>
+                    <span id="btn-loading" class="hidden flex items-center gap-2">
+                        <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                        Generating next question...
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if answered_count > 0 %}
+    <div class="space-y-4">
+        <p class="text-xs text-gray-500 uppercase tracking-wider">Previous answers</p>
+        {% for q in interview.questions.all %}
+            {% if q.answer %}
+            <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-4">
+                <p class="text-xs text-gray-500 mb-1">Q{{ q.order }}: {{ q.text }}</p>
+                <p class="text-sm text-gray-300">{{ q.answer.text }}</p>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+    function updateCharCount(textarea) {
+        const count = textarea.value.length;
+        const max = 1000;
+        const countEl = document.getElementById('char-count');
+        const warningEl = document.getElementById('char-warning');
+
+        countEl.textContent = `${count} / ${max}`;
+
+        if (count >= 900) {
+            countEl.classList.add('text-yellow-400');
+            countEl.classList.remove('text-gray-500');
+            warningEl.classList.remove('hidden');
+        } else if (count >= max) {
+            countEl.classList.add('text-red-400');
+            countEl.classList.remove('text-yellow-400');
+        } else {
+            countEl.classList.remove('text-yellow-400', 'text-red-400');
+            countEl.classList.add('text-gray-500');
+            warningEl.classList.add('hidden');
+        }
+    }
+
+    document.getElementById('answer-form').addEventListener('submit', function() {
+        const btn = document.getElementById('submit-btn');
+        const btnText = document.getElementById('btn-text');
+        const btnLoading = document.getElementById('btn-loading');
+        const textarea = document.getElementById('answer-input');
+
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+        btn.classList.remove('hover:bg-blue-500');
+        btnText.classList.add('hidden');
+        btnLoading.classList.remove('hidden');
+        textarea.readOnly = true;
+    });
+</script>
+
+{% endblock %}

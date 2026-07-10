@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}New Interview — AI Interviewer{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center min-h-[80vh]">
+    <div class="w-full max-w-md">
+
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-white mb-2">Start an Interview</h1>
+            <p class="text-gray-400">Choose a topic and experience level</p>
+        </div>
+
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-6">
+                    <label class="block text-sm text-gray-400 mb-2">Interview Topic</label>
+                    <input
+                        type="text"
+                        name="topic"
+                        autofocus
+                        required
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 transition"
+                        placeholder="e.g. AI in the workplace"
+                    />
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm text-gray-400 mb-3">Experience Level</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="level" value="junior" class="hidden peer" />
+                            <div class="peer-checked:bg-blue-600 peer-checked:border-blue-500 bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-center transition">
+                                <div class="text-lg mb-1">🌱</div>
+                                <div class="text-sm font-medium text-white">Junior</div>
+                                <div class="text-xs text-gray-400">0-2 years</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="level" value="mid" class="hidden peer" checked />
+                            <div class="peer-checked:bg-blue-600 peer-checked:border-blue-500 bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-center transition">
+                                <div class="text-lg mb-1">⚡</div>
+                                <div class="text-sm font-medium text-white">Mid</div>
+                                <div class="text-xs text-gray-400">2-5 years</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="level" value="senior" class="hidden peer" />
+                            <div class="peer-checked:bg-blue-600 peer-checked:border-blue-500 bg-gray-800 border border-gray-700 rounded-lg px-3 py-3 text-center transition">
+                                <div class="text-lg mb-1">🚀</div>
+                                <div class="text-sm font-medium text-white">Senior</div>
+                                <div class="text-xs text-gray-400">5+ years</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-lg transition"
+                >
+                    Start Interview →
+                </button>
+            </form>
+
+            <div class="mt-6">
+                <p class="text-xs text-gray-500 mb-3">Or try one of these topics:</p>
+                <div class="flex flex-wrap gap-2">
+                    {% for suggestion in suggestions %}
+                    <button
+                        onclick="document.querySelector('input[name=topic]').value='{{ suggestion }}'"
+                        class="text-xs px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-full text-gray-300 transition"
+                    >
+                        {{ suggestion }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

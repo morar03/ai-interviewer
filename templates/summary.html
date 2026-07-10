@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Summary — AI Interviewer{% endblock %}
+
+{% block content %}
+<div class="w-full max-w-2xl mx-auto">
+
+    <div class="mb-8 text-center">
+        <div class="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center text-2xl mx-auto mb-4">✓</div>
+        <h1 class="text-3xl font-bold text-white mb-2">Interview Complete</h1>
+        <p class="text-gray-400">Topic: <span class="text-white">{{ interview.topic }}</span></p>
+    </div>
+
+    <!-- Summary Card -->
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-6">
+        <h2 class="text-sm text-gray-400 uppercase tracking-wider mb-3">Summary</h2>
+        <p class="text-white leading-relaxed">{{ interview.summary }}</p>
+    </div>
+
+    <!-- Sentiment + Keywords -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+            <h2 class="text-sm text-gray-400 uppercase tracking-wider mb-3">Sentiment</h2>
+            {% if interview.sentiment == "Positive" %}
+                <span class="text-green-400 text-xl font-semibold">↑ Positive</span>
+            {% elif interview.sentiment == "Negative" %}
+                <span class="text-red-400 text-xl font-semibold">↓ Negative</span>
+            {% else %}
+                <span class="text-yellow-400 text-xl font-semibold">→ Neutral</span>
+            {% endif %}
+        </div>
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6">
+            <h2 class="text-sm text-gray-400 uppercase tracking-wider mb-3">Keywords</h2>
+            <div class="flex flex-wrap gap-2">
+                {% for keyword in interview.keywords.split %}
+                <span class="text-xs px-2 py-1 bg-blue-900/40 border border-blue-700 rounded-full text-blue-300">
+                    {{ keyword }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Transcript -->
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 mb-6">
+        <h2 class="text-sm text-gray-400 uppercase tracking-wider mb-4">Full Transcript</h2>
+        <div class="space-y-6">
+            {% for q in questions %}
+            <div>
+                <div class="flex items-start gap-3 mb-2">
+                    <div class="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold shrink-0">AI</div>
+                    <p class="text-gray-300 text-sm">{{ q.text }}</p>
+                </div>
+                {% if q.answer %}
+                <div class="flex items-start gap-3 ml-9">
+                    <div class="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs font-bold shrink-0">U</div>
+                    <p class="text-white text-sm">{{ q.answer.text }}</p>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex gap-4">
+    <a href="/"
+        class="flex-1 text-center bg-blue-600 hover:bg-blue-500 text-white font-medium py-3 rounded-lg transition">
+        New Interview
+    </a>
+    <a href="/history/"
+        class="flex-1 text-center bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 rounded-lg transition">
+        View History
+    </a>
+    <a href="/summary/{{ interview.id }}/pdf/"
+        class="flex-1 text-center bg-gray-800 hover:bg-gray-700 text-white font-medium py-3 rounded-lg transition">
+        Export PDF
+    </a>
+</div>
+
+</div>
+{% endblock %}
