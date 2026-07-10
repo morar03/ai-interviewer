@@ -5,7 +5,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./data:/app/data
-      - ./db.sqlite3:/app/db.sqlite3
+      - ai_interviewer_data:/app/data
     env_file:
       - .env
+
+volumes:
+  ai_interviewer_data:
