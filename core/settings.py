@@ -12,6 +12,12 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://yonder.cristianmorar.ro',
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -71,7 +77,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://yonder.cristianmorar.ro',
-]
