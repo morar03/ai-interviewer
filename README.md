@@ -11,6 +11,7 @@ An AI-powered interview application built with Django and Claude API. The system
 - Interview history with past transcripts
 - PDF export of full interview transcript
 - Simple authentication system
+- Rate limiting on login (5 attempts, 30 minute lockout)
 
 ## Tech Stack
 
@@ -28,7 +29,7 @@ Create a `.env` file in the root directory with the following variables:
 ```env
 # Django
 SECRET_KEY=your-secret-key-here
-DEBUG=False
+DEBUG=True
 
 # Anthropic
 ANTHROPIC_API_KEY=your-anthropic-api-key-here
@@ -37,8 +38,10 @@ ANTHROPIC_API_KEY=your-anthropic-api-key-here
 APP_USERNAME=your-username
 APP_PASSWORD=your-password
 
-# Database (optional, defaults to db.sqlite3 in project root)
-DB_PATH=/app/data/db.sqlite3
+# Database
+# Local development: use DB_PATH=db.sqlite3
+# Docker/Production: use DB_PATH=/app/data/db.sqlite3
+DB_PATH=db.sqlite3
 ```
 
 ### How to get the values:
@@ -60,7 +63,7 @@ DB_PATH=/app/data/db.sqlite3
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/ai-interviewer.git
+git clone https://github.com/morar03/ai-interviewer.git
 cd ai-interviewer
 ```
 
@@ -98,21 +101,33 @@ python manage.py runserver
 
 ## Docker Deployment
 
-### Using Docker Compose
+### Using Docker Compose (local)
 
-1. Clone the repository on your server
-2. Create `.env` file with your variables
+1. Clone the repository
+2. Create `.env` file with `DB_PATH=/app/data/db.sqlite3`
 3. Build and run:
 ```bash
 docker-compose up -d
 ```
 
-### Using Portainer
+### Using Portainer (production)
 
 1. In Portainer, go to **Stacks → Add Stack**
-2. Paste the contents of `docker-compose.yml`
-3. Add your environment variables
-4. Click **Deploy the stack**
+2. Select **Repository** as build method
+3. Set Repository URL: `https://github.com/morar03/ai-interviewer`
+4. Set Compose path: `docker-compose.prod.yml`
+5. Add environment variables in the **Environment variables** section:
+
+| Variable | Value |
+|---|---|
+| `SECRET_KEY` | your secret key |
+| `DEBUG` | `False` |
+| `ANTHROPIC_API_KEY` | your API key |
+| `APP_USERNAME` | your username |
+| `APP_PASSWORD` | your password |
+| `DB_PATH` | `/app/data/db.sqlite3` |
+
+6. Click **Deploy the stack**
 
 ## How It Works
 
